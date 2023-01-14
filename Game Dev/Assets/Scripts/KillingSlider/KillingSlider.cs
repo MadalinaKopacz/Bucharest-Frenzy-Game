@@ -9,6 +9,7 @@ public class KillingSlider : MonoBehaviour
     [SerializeField] private float movingSpeed = 0.03f;
     [SerializeField] private float maxIdleTime = 7; // 7 seconds
     [SerializeField] private float maxLevelTime = 2 * 60; // 2 mins
+    [SerializeField] private GameObject player;
     private Vector3 end;
     private Vector3 start;
     private float startTime;
@@ -67,6 +68,8 @@ public class KillingSlider : MonoBehaviour
                     if (!sound.isPlaying) {
                         sound.Play();
                     }
+                    gameObject.transform.position = new Vector3(gameObject.transform.position.x, player.transform.position.y, gameObject.transform.position.z);
+                    end = new Vector3(end.x, player.transform.position.y, end.z);
                     gameObject.transform.position = Vector3.MoveTowards(gameObject.transform.position, end, movingSpeed);
                 }
             }
@@ -77,6 +80,8 @@ public class KillingSlider : MonoBehaviour
                 if (!sound.isPlaying) {
                     sound.Play();
                 }
+                gameObject.transform.position = new Vector3(gameObject.transform.position.x, player.transform.position.y, gameObject.transform.position.z);
+                end = new Vector3(end.x, player.transform.position.y, end.z);
                 gameObject.transform.position = Vector3.MoveTowards(gameObject.transform.position, end, movingSpeed);
             }
 

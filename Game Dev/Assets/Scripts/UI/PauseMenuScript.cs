@@ -45,7 +45,7 @@ public class PauseMenuScript : MonoBehaviour
     public void loadMainMenuScene()
     {
         resumeGame();
-        SceneManager.LoadScene(0);
+        SceneManager.LoadScene("Assets/Scenes/MainMenuScene.unity");
     }
 
     public void loadShopMenu()

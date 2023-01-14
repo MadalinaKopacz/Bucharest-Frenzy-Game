@@ -27,7 +27,9 @@ public class PlayerScript : MonoBehaviour
     public AudioClip hurtSound;
     public AudioClip downgradeSound;
     public AudioClip upgradeSound;
-    
+
+    private bool isTakingDamage = false;
+    private int enemyDamage = 0;
     private void Start()
     {
         healthScript = healthBar.GetComponent<HealthBarScript>();
@@ -47,6 +49,10 @@ public class PlayerScript : MonoBehaviour
             isHit = false;
             timeSinceLastHit = Time.time;
         }
+        if (!isHit && isTakingDamage)
+        {
+            takeDamage(enemyDamage);
+        }
         currencyScript.setCurrency(gold);
     }
 
@@ -55,9 +61,11 @@ public class PlayerScript : MonoBehaviour
         if (hp <= 0)
         {
             gameOver.SetActive(true);
+            Time.timeScale = 0f;
         }
         else
         {
+            Time.timeScale = 1f;
             gameOver.SetActive(false);
         }
     }
@@ -76,26 +84,27 @@ public class PlayerScript : MonoBehaviour
         }
     }
 
+    private void takeDamage(int damage)
+    {
+        hp -= damage;
+        isHit = true;
+        playSound(hurtSound, 0.02f);
+        healthScript.setHealth();
+        CheckGameOver();
+    }
+
     private IEnumerator OnCollisionEnter2D(Collision2D collision)
     {
-        int damage = 20; // to be changed dynamically when more enemies are implemented
-        var obstaclesList = new List<string> { "Rat" };
-        if (obstaclesList.Contains(collision.gameObject.tag))
+        if (collision.gameObject.CompareTag("Rat"))
         {
-            if (!isHit)
-            {
-                hp -= damage;
-                isHit = true;
-                playSound(hurtSound, 0.02f);
-                healthScript.setHealth();
-            }
-            CheckGameOver();
+            isTakingDamage = true;
+            enemyDamage = 20;
         }
         int damageBird = 15;
         if (collision.gameObject.CompareTag("caca"))
         {
             Destroy(collision.gameObject);
-            
+
             hp -= damageBird;
             isHit = true;
             playSound(hurtSound, 0.02f);
@@ -104,16 +113,10 @@ public class PlayerScript : MonoBehaviour
             CheckGameOver();
         }
 
-        int damageDog = 25;
         if (collision.gameObject.CompareTag("Dog"))
         {
-            if (!isHit)
-            {
-                hp -= damageDog;
-                isHit = true;
-                healthScript.setHealth();
-            }
-            CheckGameOver();
+            isTakingDamage = true;
+            enemyDamage = 25;
         }
 
         if (collision.gameObject.CompareTag("Coin"))
@@ -174,6 +177,16 @@ public class PlayerScript : MonoBehaviour
         {
             StartCoroutine(RestoreValuesPowerup(duration, restoreDamagePerHit, 
                 restoreSpeed, restoreJump));
+        }
+    }
+
+    private void OnCollisionExit2D(Collision2D collision)
+    {
+        var obstaclesList = new List<string> { "Rat", "Dog" };
+
+        if (obstaclesList.Contains(collision.gameObject.tag))
+        {
+            isTakingDamage = false;
         }
     }
 

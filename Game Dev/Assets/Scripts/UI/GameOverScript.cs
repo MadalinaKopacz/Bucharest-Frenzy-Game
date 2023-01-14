@@ -13,8 +13,9 @@ public class GameOverScript : MonoBehaviour
 
     public void resetGame()
     {
+        Time.timeScale = 1f;
         resetStats();
-        SceneManager.LoadScene(0);
+        SceneManager.LoadScene("Assets/Scenes/MainMenuScene.unity");
     }
 
     private void resetStats()

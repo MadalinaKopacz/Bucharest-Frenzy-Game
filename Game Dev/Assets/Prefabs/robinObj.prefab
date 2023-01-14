@@ -273,7 +273,7 @@ MonoBehaviour:
   scale: 4
   bullet: {fileID: 7318365970941365439, guid: 267ed55e44c6ffb479861745e1e0829d, type: 3}
   bulletParent: {fileID: 3914888996116542}
-  fireRate: 1
+  fireRate: 2
 --- !u!82 &7449017881600175276
 AudioSource:
   m_ObjectHideFlags: 0

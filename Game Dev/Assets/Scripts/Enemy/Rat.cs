@@ -27,7 +27,8 @@ public class Rat : MonoBehaviour
 
             if (hp <= 0)
             {
-                Destroy(gameObject);
+                //Destroy(gameObject);
+                Destroy(transform.parent.gameObject);
             }
         }
 

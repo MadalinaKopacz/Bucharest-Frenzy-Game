@@ -1234,6 +1234,7 @@ MonoBehaviour:
   movingSpeed: 0.07
   maxIdleTime: 12
   maxLevelTime: 120
+  player: {fileID: 1820336218}
 --- !u!212 &423608541
 SpriteRenderer:
   m_ObjectHideFlags: 0
@@ -5667,6 +5668,22 @@ PrefabInstance:
       propertyPath: playerScript
       value: 
       objectReference: {fileID: 1820336219}
+    - target: {fileID: 1392791449595459540, guid: f4399aa4325b958428223a28f82e9851, type: 3}
+      propertyPath: m_SizeDelta.x
+      value: 65.8073
+      objectReference: {fileID: 0}
+    - target: {fileID: 1392791449595459540, guid: f4399aa4325b958428223a28f82e9851, type: 3}
+      propertyPath: m_SizeDelta.y
+      value: 35.7031
+      objectReference: {fileID: 0}
+    - target: {fileID: 1392791449595459540, guid: f4399aa4325b958428223a28f82e9851, type: 3}
+      propertyPath: m_AnchoredPosition.x
+      value: 5.3552246
+      objectReference: {fileID: 0}
+    - target: {fileID: 1392791449595459540, guid: f4399aa4325b958428223a28f82e9851, type: 3}
+      propertyPath: m_AnchoredPosition.y
+      value: 2.1096191
+      objectReference: {fileID: 0}
     - target: {fileID: 2366228978969179370, guid: f4399aa4325b958428223a28f82e9851, type: 3}
       propertyPath: m_SizeDelta.x
       value: 50
