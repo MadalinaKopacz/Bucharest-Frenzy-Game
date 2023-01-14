@@ -16238,9 +16238,9 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 873fb67ab2763954f8e146385891c806, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  hpAddition: 0
+  hpAddition: 10
   damageAddition: 0
-  speedAddition: 1.5
+  speedAddition: 2
   jumpAddition: 3
   powerupDuration: 5
   price: 0
@@ -17342,7 +17342,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   hpAddition: 0
   damageAddition: 0
-  speedAddition: 3
+  speedAddition: 100
   jumpAddition: 8
   powerupDuration: 3
   price: 0

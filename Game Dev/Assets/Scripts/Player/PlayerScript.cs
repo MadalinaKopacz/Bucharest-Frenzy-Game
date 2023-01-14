@@ -131,7 +131,7 @@ public class PlayerScript : MonoBehaviour
         {
             Destroy(collision.gameObject);
             Inverted = true;
-            yield return new WaitForSeconds(5);
+            yield return new WaitForSeconds(7);
             Inverted = false;
 
         }
