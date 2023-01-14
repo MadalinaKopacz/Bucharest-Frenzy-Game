@@ -17,8 +17,10 @@ public class PlayerScript : MonoBehaviour
     [SerializeField] public int damagePerHit;
 
     private bool isHit;
+    private bool godMode = false;
     private float timeSinceLastHit;
     public bool Inverted { get; set; }
+    public static bool isGameOver = false;
 
     private AudioSource soundPlayer1;
     private AudioSource soundPlayer2;
@@ -54,12 +56,23 @@ public class PlayerScript : MonoBehaviour
             takeDamage(enemyDamage);
         }
         currencyScript.setCurrency(gold);
+
+        if (Input.GetKeyDown(KeyCode.K))
+        {
+            godMode = !godMode;
+            SetHp(100);
+            Debug.Log("god");
+        }
+
+        if (!godMode)
+            Debug.Log("normal");
     }
 
     public void CheckGameOver()
     {
         if (hp <= 0)
         {
+            isGameOver = true;
             gameOver.SetActive(true);
             Time.timeScale = 0f;
         }
@@ -99,13 +112,22 @@ public class PlayerScript : MonoBehaviour
         {
             isTakingDamage = true;
             enemyDamage = 20;
+            if (!isHit)
+            {
+                if (!godMode)
+                    hp -= enemyDamage;
+                isHit = true;
+                playSound(hurtSound, 0.02f);
+                healthScript.setHealth();
+            }
+            CheckGameOver();
         }
         int damageBird = 15;
         if (collision.gameObject.CompareTag("caca"))
         {
-            Destroy(collision.gameObject);
-
-            hp -= damageBird;
+            Destroy(collision.gameObject);  
+            if(!godMode)
+                hp -= damageBird;
             isHit = true;
             playSound(hurtSound, 0.02f);
             healthScript.setHealth();
@@ -117,6 +139,14 @@ public class PlayerScript : MonoBehaviour
         {
             isTakingDamage = true;
             enemyDamage = 25;
+            if (!isHit)
+            {
+                if (!godMode)
+                    hp -= enemyDamage;
+                isHit = true;
+                healthScript.setHealth();
+            }
+            CheckGameOver();
         }
 
         if (collision.gameObject.CompareTag("Coin"))
@@ -273,6 +303,12 @@ public class PlayerScript : MonoBehaviour
 
     public void SetHp(int newHp)
     {
+        if(godMode == true)
+        {
+            hp = 100;
+            return;
+        }
+
         hp = newHp;
     }
 
