@@ -151,7 +151,8 @@ public class PlayerScript : MonoBehaviour
 
     private void takeDamage(int damage)
     {
-        hp -= damage;
+        if(!godMode)
+            hp -= damage;
         isHit = true;
         playSound(hurtSound, 0.02f);
         healthScript.setHealth();
