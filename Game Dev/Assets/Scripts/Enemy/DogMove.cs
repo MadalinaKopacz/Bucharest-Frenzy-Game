@@ -63,9 +63,9 @@ public class DogMove : MonoBehaviour
 
     void Start()
     {
-        Physics2D.IgnoreLayerCollision(7, 8);
-        Physics2D.IgnoreLayerCollision(6, 8);
-        Physics2D.IgnoreLayerCollision(8,10);
+        Physics2D.IgnoreLayerCollision(7, 12);
+        Physics2D.IgnoreLayerCollision(6, 12);
+        Physics2D.IgnoreLayerCollision(12,10);
         rb = GetComponent<Rigidbody2D>();
         initialPlayerPositionY = player.position.y;
     }
