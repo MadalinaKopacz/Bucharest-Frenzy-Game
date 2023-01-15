@@ -4,6 +4,14 @@ using UnityEngine;
 
 public class Rat : MonoBehaviour
 {
+    [SerializeField] public string id;
+        
+    [ContextMenu("Generate ID")]
+    public void GenerateID()
+    {
+        id = System.Guid.NewGuid().ToString();
+    }
+    
     [SerializeField] private int hp = 10;
     [SerializeField] private Transform player;
     private Rigidbody2D rb;
