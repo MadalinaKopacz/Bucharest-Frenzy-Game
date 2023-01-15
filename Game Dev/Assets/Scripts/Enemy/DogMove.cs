@@ -21,7 +21,7 @@ public class DogMove : MonoBehaviour
     [SerializeField] private float agroDash;
 
     private bool isDashing;
-    private float dashingPower = 2f;
+    private float dashingPower = 4f;
     private float dashingTime = 1f;
     private float dashingCooldown = 1f;
 
@@ -43,7 +43,7 @@ public class DogMove : MonoBehaviour
     {
         GetComponent<BoxCollider2D>().isTrigger = true;
 
-        GameObject root = new(name + "_Root");
+        GameObject root = new GameObject(name + "_Root");
 
         root.transform.position = transform.position;
         transform.SetParent(root.transform);
@@ -52,10 +52,10 @@ public class DogMove : MonoBehaviour
         waypoints.transform.SetParent(root.transform);
         waypoints.transform.position = root.transform.position;
 
-        GameObject p1 = new("Point1"); 
+        GameObject p1 = new GameObject("Point1"); 
         p1.transform.SetParent(waypoints.transform); p1.transform.position = root.transform.position;
 
-        GameObject p2 = new("Point2"); 
+        GameObject p2 = new GameObject("Point2"); 
         p2.transform.SetParent(waypoints.transform); p2.transform.position = root.transform.position;
 
         points = new List<Transform> { p1.transform, p2.transform };
@@ -141,11 +141,13 @@ public class DogMove : MonoBehaviour
 
         if (transform.position.x > playerPosX)
         {
-            rb.velocity = new Vector2(playerPosX - dashingPower, 0f);
+            rb.velocity = new Vector2(-dashingPower, 0f);
+            transform.localScale = scale * new Vector2(1, 1);
         }
         else
         {
-            rb.velocity = new Vector2(playerPosX + dashingPower, 0f);
+            rb.velocity = new Vector2(dashingPower, 0f);
+            transform.localScale = scale * new Vector2(-1, 1);
 
         }
         yield return new WaitForSeconds(dashingTime);
