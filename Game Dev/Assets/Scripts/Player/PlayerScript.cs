@@ -2,8 +2,9 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
-public class PlayerScript : MonoBehaviour
+public class PlayerScript : MonoBehaviour, IDataManager
 {
+    // UI
     [SerializeField] private GameObject healthBar;
     private HealthBarScript healthScript;
 
@@ -12,16 +13,20 @@ public class PlayerScript : MonoBehaviour
 
     [SerializeField] private GameObject gameOver;
 
+    // Player stats
     [SerializeField] private int hp = 100;
     [SerializeField] private int gold = 10;
     [SerializeField] public int damagePerHit;
 
-    private bool isHit;
-    private bool godMode = false;
-    private float timeSinceLastHit;
-    public bool Inverted { get; set; }
-    public static bool isGameOver = false;
+    // Powerup stats helper
+    [SerializeField] public int restoreDamagePerHit;
+    [SerializeField] public float restoreSpeed;
+    [SerializeField] public float restoreJump;
+    [SerializeField] public float timeLeft;
+    [SerializeField] public bool inPowerup;
 
+
+    // Sound
     private AudioSource soundPlayer1;
     private AudioSource soundPlayer2;
     public AudioClip shootSound;
@@ -30,8 +35,67 @@ public class PlayerScript : MonoBehaviour
     public AudioClip downgradeSound;
     public AudioClip upgradeSound;
 
+    // Helpers
+    private bool isHit;
+    private bool godMode = false;
+    private float timeSinceLastHit;
+    public bool Inverted { get; set; }
+    public static bool isGameOver = false;
     private bool isTakingDamage = false;
     private int enemyDamage = 0;
+    
+    public void LoadData(GameData data)
+    {
+        Start();
+        healthScript.Start();
+        transform.position = data.playerData.position;
+        this.hp = data.playerData.hp;
+        this.gold = data.playerData.gold;
+        this.damagePerHit = data.playerData.damagePerHit;
+        
+        // PlayerMovement
+        gameObject.GetComponent<PlayerMovement>().setSpeed(data.playerData.speed);
+        gameObject.GetComponent<PlayerMovement>().setJumpSize(data.playerData.jumpSize);
+
+        // Player powerup
+        this.inPowerup =  data.playerData.inPowerup;
+        this.restoreDamagePerHit = data.playerData.restoreDamagePerHit;
+        this.restoreSpeed = data.playerData.restoreSpeed;
+        this.restoreJump = data.playerData.restoreJump;
+        this.timeLeft = data.playerData.timeLeft;
+
+        healthScript.Start();
+        healthScript.setHealth();
+        currencyScript.setCurrency(gold);
+
+        if (inPowerup)
+        {
+            // Player was using a powerup when game was saved, make sure
+            // to restore the values
+            StartCoroutine(RestoreValuesPowerup(timeLeft, restoreDamagePerHit, 
+                restoreSpeed, restoreJump));
+        }
+    }
+
+    public void SaveData(ref GameData data)
+    {
+        data.playerData.position = gameObject.transform.position;
+        data.playerData.hp = this.hp;
+        data.playerData.gold = this.gold;
+        data.playerData.damagePerHit = this.damagePerHit;
+
+        // Player movement
+        data.playerData.speed = gameObject.GetComponent<PlayerMovement>().getSpeed();
+        data.playerData.jumpSize = gameObject.GetComponent<PlayerMovement>().getJumpSize();
+        
+        // Player powerup
+        data.playerData.inPowerup = this.inPowerup;
+        data.playerData.restoreDamagePerHit = this.restoreDamagePerHit;
+        data.playerData.restoreSpeed = this.restoreSpeed;
+        data.playerData.restoreJump = this.restoreJump;
+        data.playerData.timeLeft = this.timeLeft;
+    }
+
     private void Start()
     {
         healthScript = healthBar.GetComponent<HealthBarScript>();
@@ -72,9 +136,6 @@ public class PlayerScript : MonoBehaviour
             SetHp(100);
             Debug.Log("god");
         }
-
-        if (!godMode)
-            Debug.Log("normal");
     }
 
     public void CheckGameOver()
@@ -249,17 +310,28 @@ public class PlayerScript : MonoBehaviour
         }
         // Hp is added without being removed later
         PowerupHp(powerup, isDownGrade);
-        int restoreDamagePerHit = PowerupDamage(powerup, isDownGrade);
-        float restoreSpeed = PowerupSpeed(powerup, isDownGrade);
-        float restoreJump = PowerupJump(powerup, isDownGrade);
+
+        inPowerup = true;
+        int _restoreDamagePerHit = PowerupDamage(powerup, isDownGrade);
+        float _restoreSpeed = PowerupSpeed(powerup, isDownGrade);
+        float _restoreJump = PowerupJump(powerup, isDownGrade);
 
         float duration = powerup.GetComponent<Powerup>().getPowerupDuration();
+
+        if (restoreDamagePerHit == 0 && duration > 0)
+        {
+            restoreDamagePerHit = _restoreDamagePerHit;
+            restoreSpeed = _restoreSpeed;
+            restoreJump = _restoreJump;
+        }
+
+        timeLeft = duration;
 
         // When powerup duration expires restore values back
         if (duration > 0)
         {
-            StartCoroutine(RestoreValuesPowerup(duration, restoreDamagePerHit, 
-                restoreSpeed, restoreJump));
+            StartCoroutine(RestoreValuesPowerup(duration, _restoreDamagePerHit, 
+                _restoreSpeed, _restoreJump));
         }
     }
 
@@ -283,6 +355,12 @@ public class PlayerScript : MonoBehaviour
         damagePerHit = oldDamagePerHit;
         GetComponent<PlayerMovement>().setSpeed(oldSpeed);
         GetComponent<PlayerMovement>().setJumpSize(oldJumpSize);
+
+        restoreDamagePerHit = 0;
+        restoreSpeed = 0;
+        restoreJump = 0;
+        timeLeft = 0;
+        inPowerup = false;
     }
 
     private void PowerupHp(GameObject powerup, bool isDownGrade = false)
