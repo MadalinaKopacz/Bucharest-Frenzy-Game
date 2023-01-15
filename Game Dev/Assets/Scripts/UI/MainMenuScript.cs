@@ -47,7 +47,7 @@ public class MainMenuScript : MonoBehaviour
         }
 
         resolutionDropdown.AddOptions(options);
-        resolutionDropdown.value = currentResolutionIndex;
+        SetResolution(currentResolutionIndex);
         resolutionDropdown.RefreshShownValue();
     }
 

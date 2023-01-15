@@ -36,13 +36,11 @@ public class DataManager : MonoBehaviour
     {
         if (Input.GetKey(KeyCode.P))
         {
-            Debug.Log("Save game with key P");
             SaveGame();
         } 
 
         if (Input.GetKey(KeyCode.L))
         {
-            Debug.Log("Load game with key L");
             LoadGame();
         } 
     }
@@ -59,7 +57,6 @@ public class DataManager : MonoBehaviour
             if (FileManager.LoadFromFile("GameSave.dat", out var json))
             {
                 gameData.LoadFromJson(json);
-                Debug.Log(gameData.ToJson());
                 if (gameData.sceneIdx == 0 || gameData.sceneIdx == 1)
                 {
                     // saved in menu
@@ -101,7 +98,6 @@ public class DataManager : MonoBehaviour
             dataObject.SaveData(ref gameData);
         }
 
-        Debug.Log(gameData.ToJson());
         FileManager.WriteToFile("GameSave.dat", gameData.ToJson());
     }
 
