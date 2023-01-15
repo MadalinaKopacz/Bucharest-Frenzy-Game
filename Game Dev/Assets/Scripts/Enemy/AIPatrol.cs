@@ -77,6 +77,16 @@ public class AIPatrol : MonoBehaviour
 
     private void Update()
     {
+        if (Time.timeScale == 0 && enemySound.isPlaying)
+        {
+            enemySound.Pause();
+        }
+
+        if (Time.timeScale == 1 && !enemySound.isPlaying)
+        {
+            enemySound.Play();
+        }
+
         float distanceToPlayer = Vector2.Distance(transform.position, player.position);
         
 

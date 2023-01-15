@@ -42,52 +42,66 @@ public class KillingSlider : MonoBehaviour
 
     void Update() 
     {
+        if (Time.timeScale == 0 && sound.isPlaying)
+        {
+            sound.Pause();
+        }
+
+        if (Time.timeScale == 1 && !sound.isPlaying)
+        {
+            sound.Play();
+        }
+
         //  If slider is in view nothing can stop it 😈
         Vector3 viewPos = Camera.main.WorldToViewportPoint(gameObject.transform.position);
-        if (!(viewPos.x > -0.15 && viewPos.x <= 1 && viewPos.y >= 0 && viewPos.y <= 1 && viewPos.z > 0))
-        {
-            float currentTime = Time.time;
+        if (Time.timeScale != 0) {
+            if (!(viewPos.x > -0.15 && viewPos.x <= 1 && viewPos.y >= 0 && viewPos.y <= 1 && viewPos.z > 0))
+            {
+                float currentTime = Time.time;
 
-            if (!checkIdle())
-            {
-                // Player moved
-                isIdle = false; 
-            }
-            else if (checkIdle() && !isIdle)
-            {
-                // Player entered idle state
-                isIdle = true;
-                startIdle = currentTime;
-            }
-            
-            // In case slider enters camera view, don't stop.
-            if (isIdle)
-            {
-                if (currentTime - startIdle >= maxIdleTime)
+                if (!checkIdle())
+                {
+                    // Player moved
+                    isIdle = false; 
+                }
+                else if (checkIdle() && !isIdle)
+                {
+                    // Player entered idle state
+                    isIdle = true;
+                    startIdle = currentTime;
+                }
+                
+                // In case slider enters camera view, don't stop.
+                if (isIdle)
+                {
+                    if (currentTime - startIdle >= maxIdleTime)
+                    {
+                        if (!sound.isPlaying) {
+                            sound.Play();
+                        }
+                        gameObject.transform.position = Vector3.MoveTowards(gameObject.transform.position, end, movingSpeed);
+                    }
+                }
+
+
+                if (currentTime - startTime >= maxLevelTime)
                 {
                     if (!sound.isPlaying) {
                         sound.Play();
                     }
                     gameObject.transform.position = new Vector3(gameObject.transform.position.x, player.transform.position.y, gameObject.transform.position.z);
                     end = new Vector3(end.x, player.transform.position.y, end.z);
-                    gameObject.transform.position = Vector3.MoveTowards(gameObject.transform.position, end, movingSpeed);
+                    gameObject.transform.position = Vector3.MoveTowards(gameObject.transform.position, end, movingSpeed * Time.timeScale);
                 }
             }
-
-
-            if (currentTime - startTime >= maxLevelTime)
-            {
+            else {
                 if (!sound.isPlaying) {
                     sound.Play();
                 }
                 gameObject.transform.position = new Vector3(gameObject.transform.position.x, player.transform.position.y, gameObject.transform.position.z);
                 end = new Vector3(end.x, player.transform.position.y, end.z);
-                gameObject.transform.position = Vector3.MoveTowards(gameObject.transform.position, end, movingSpeed);
+                gameObject.transform.position = Vector3.MoveTowards(gameObject.transform.position, end, movingSpeed * Time.timeScale);
             }
-
-        }
-        else {
-            gameObject.transform.position = Vector3.MoveTowards(gameObject.transform.position, end, movingSpeed);
         }
     }
 
