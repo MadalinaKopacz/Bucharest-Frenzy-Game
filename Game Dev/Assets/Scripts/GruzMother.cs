@@ -18,11 +18,11 @@ public class GruzMother : MonoBehaviour
     [SerializeField] Transform player;
 
     [Header("Other")]
-    [SerializeField] Transform goundCheckUp;
-    [SerializeField] Transform goundCheckDown;
-    [SerializeField] Transform goundCheckWall;
-    [SerializeField] float groundCheckRadius;
-    [SerializeField] LayerMask groundLayer;
+    //[SerializeField] Transform groundCheckUp;
+    //[SerializeField] Transform groundCheckDown;
+    //[SerializeField] Transform groundCheckWall;
+    //[SerializeField] float groundCheckRadius;
+   // [SerializeField] LayerMask groundLayer;
     private bool isTouchingUp;
     private bool isTouchingDown;
     private bool isTouchingWall;
@@ -47,9 +47,44 @@ public class GruzMother : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
-        isTouchingUp = Physics2D.OverlapCircle(goundCheckUp.position, groundCheckRadius, groundLayer); 
-        isTouchingDown = Physics2D.OverlapCircle(goundCheckDown.position, groundCheckRadius, groundLayer); 
-        isTouchingWall = Physics2D.OverlapCircle(goundCheckWall.position, groundCheckRadius, groundLayer);
+        //isTouchingUp = ; 
+        //isTouchingDown = Physics2D.OverlapCircle(groundCheckDown.position, groundCheckRadius, groundLayer); 
+        //isTouchingWall = Physics2D.OverlapCircle(groundCheckWall.position, groundCheckRadius, groundLayer);
+    }
+
+    private void OnCollisionEnter2D(Collision2D collision)
+    {
+        if (collision.gameObject.CompareTag("Up"))
+        {
+            isTouchingUp=true;
+        }
+
+        if (collision.gameObject.CompareTag("Ground"))
+        {
+            isTouchingDown=true;
+        }
+
+        if (collision.gameObject.CompareTag("Walls"))
+        {
+            isTouchingWall=true;
+        }
+    }
+    private void OnCollisionLeave2D(Collision2D collision)
+    {
+        if (collision.gameObject.CompareTag("Up"))
+        {
+            isTouchingUp=false;
+        }
+
+        if (collision.gameObject.CompareTag("Ground"))
+        {
+            isTouchingDown=false;
+        }
+
+        if (collision.gameObject.CompareTag("Walls"))
+        {
+            isTouchingWall=false;
+        }
     }
 
     void RandomStatePicker()
@@ -169,11 +204,11 @@ public class GruzMother : MonoBehaviour
         transform.Rotate(0, 180, 0);
     }
 
-    private void OnDrawGizmosSelected()
+   /* private void OnDrawGizmosSelected()
     {
         Gizmos.color = Color.cyan;
-        Gizmos.DrawWireSphere(goundCheckUp.position, groundCheckRadius);
-        Gizmos.DrawWireSphere(goundCheckDown.position, groundCheckRadius);
-        Gizmos.DrawWireSphere(goundCheckWall.position, groundCheckRadius);
-    }
+       Gizmos.DrawWireSphere(groundCheckUp.position, groundCheckRadius);
+        Gizmos.DrawWireSphere(groundCheckDown.position, groundCheckRadius);
+        Gizmos.DrawWireSphere(groundCheckWall.position, groundCheckRadius);
+    } */
 }

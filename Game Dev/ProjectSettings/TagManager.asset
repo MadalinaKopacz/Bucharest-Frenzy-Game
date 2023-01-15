@@ -19,6 +19,9 @@ TagManager:
   - Spike
   - Downgrade
   - Dog
+  - GruzMother
+  - Up
+  - Wall
   layers:
   - Default
   - TransparentFX
