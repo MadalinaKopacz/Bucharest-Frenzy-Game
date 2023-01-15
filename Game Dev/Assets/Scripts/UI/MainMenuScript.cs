@@ -77,19 +77,6 @@ public class MainMenuScript : MonoBehaviour
         Screen.fullScreen = _isFullScreen;
     }
 
-    public void newGame()
-    {
-        SceneManager.LoadScene("Assets/Scenes/Level1.unity");
-    }
-
-    public void loadGame()
-    {
-        if (!DataManager.LoadJsonData())
-        {
-            newGame();
-        }
-    }
-
     public void loadOptions()
     {
         mainmenu.SetActive(false);
