@@ -11,7 +11,6 @@ public class GameInstructions : MonoBehaviour
     [SerializeField] private GameObject i4;
     [SerializeField] private GameObject i5;
     [SerializeField] private GameObject i6;
-    [SerializeField] private GameObject i7;
     private static bool isPaused = true;
 
     void Update()
@@ -57,15 +56,9 @@ public class GameInstructions : MonoBehaviour
         i6.SetActive(true);
     }
 
-    public void i6i7()
-    {
-        i6.SetActive(false);
-        i7.SetActive(true);
-    }
-
     public void startGame()
     {
-        i7.SetActive(false);
+        i6.SetActive(false);
         isPaused = false;
     }
 }
