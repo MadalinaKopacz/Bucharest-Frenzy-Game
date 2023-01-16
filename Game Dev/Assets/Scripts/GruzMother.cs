@@ -18,11 +18,11 @@ public class GruzMother : MonoBehaviour
     [SerializeField] Transform player;
 
     [Header("Other")]
-    //[SerializeField] Transform groundCheckUp;
-    //[SerializeField] Transform groundCheckDown;
-    //[SerializeField] Transform groundCheckWall;
-    //[SerializeField] float groundCheckRadius;
-   // [SerializeField] LayerMask groundLayer;
+    [SerializeField] Transform groundCheckUp;
+    [SerializeField] Transform groundCheckDown;
+    [SerializeField] Transform groundCheckWall;
+    [SerializeField] float groundCheckRadius;
+    [SerializeField] LayerMask groundLayer;
     private bool isTouchingUp;
     private bool isTouchingDown;
     private bool isTouchingWall;
@@ -34,6 +34,8 @@ public class GruzMother : MonoBehaviour
     private bool goingUp = true;
     private Rigidbody2D enemyRB;
     private Animator enemyAnim;
+    [SerializeField] private int hp = 50;
+    [SerializeField] private Transform player2;
 
 
     void Start()
@@ -47,44 +49,15 @@ public class GruzMother : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
-        //isTouchingUp = ; 
-        //isTouchingDown = Physics2D.OverlapCircle(groundCheckDown.position, groundCheckRadius, groundLayer); 
-        //isTouchingWall = Physics2D.OverlapCircle(groundCheckWall.position, groundCheckRadius, groundLayer);
+        isTouchingUp = Physics2D.OverlapCircle(groundCheckUp.position, groundCheckRadius, groundLayer);; 
+        isTouchingDown = Physics2D.OverlapCircle(groundCheckDown.position, groundCheckRadius, groundLayer); 
+        isTouchingWall = Physics2D.OverlapCircle(groundCheckWall.position, groundCheckRadius, groundLayer);
     }
 
-    private void OnCollisionEnter2D(Collision2D collision)
-    {
-        if (collision.gameObject.CompareTag("Up"))
-        {
-            isTouchingUp=true;
-        }
-
-        if (collision.gameObject.CompareTag("Ground"))
-        {
-            isTouchingDown=true;
-        }
-
-        if (collision.gameObject.CompareTag("Walls"))
-        {
-            isTouchingWall=true;
-        }
-    }
-    private void OnCollisionLeave2D(Collision2D collision)
-    {
-        if (collision.gameObject.CompareTag("Up"))
-        {
-            isTouchingUp=false;
-        }
-
-        if (collision.gameObject.CompareTag("Ground"))
-        {
-            isTouchingDown=false;
-        }
-
-        if (collision.gameObject.CompareTag("Walls"))
-        {
-            isTouchingWall=false;
-        }
+    void attackPlayer(){
+        enemyAnim.SetTrigger("Slamed");
+        enemyRB.velocity = Vector2.zero;
+        hasPlayerPositon = false;
     }
 
     void RandomStatePicker()
@@ -155,7 +128,7 @@ public class GruzMother : MonoBehaviour
         if (!hasPlayerPositon)
         {
             FlipTowardsPlayer();
-             playerPosition = player.position - transform.position;
+            playerPosition = player.position - transform.position;
             playerPosition.Normalize();
             hasPlayerPositon = true;
         }
@@ -168,10 +141,7 @@ public class GruzMother : MonoBehaviour
 
         if (isTouchingWall || isTouchingDown)
         {
-            //play Slam animation
-            enemyAnim.SetTrigger("Slamed");
-            enemyRB.velocity = Vector2.zero;
-            hasPlayerPositon = false;
+            attackPlayer();
         }
     }
 
@@ -204,11 +174,45 @@ public class GruzMother : MonoBehaviour
         transform.Rotate(0, 180, 0);
     }
 
-   /* private void OnDrawGizmosSelected()
+    private void OnDrawGizmosSelected()
     {
         Gizmos.color = Color.cyan;
        Gizmos.DrawWireSphere(groundCheckUp.position, groundCheckRadius);
         Gizmos.DrawWireSphere(groundCheckDown.position, groundCheckRadius);
         Gizmos.DrawWireSphere(groundCheckWall.position, groundCheckRadius);
-    } */
+    } 
+
+    private void OnCollisionEnter2D(Collision2D collision)
+    {
+        if (collision.gameObject.CompareTag("Ground"))
+        {
+            Physics2D.IgnoreCollision(collision.gameObject.GetComponent<Collider2D>(), GetComponent<Collider2D>());
+        }
+
+        if (collision.gameObject.CompareTag("Powerup"))
+        {
+            Physics2D.IgnoreCollision(collision.gameObject.GetComponent<Collider2D>(), GetComponent<Collider2D>());
+        }
+
+        if (collision.gameObject.CompareTag("Player"))
+        {
+            ChangeDirection();
+        }
+
+    }
+    private void OnTriggerEnter2D(Collider2D collider){
+        if (collider.gameObject.CompareTag("Bullet"))
+        {
+            // Get damage per hit from player
+            GameObject player2 = GameObject.Find("Player");
+            int damage = player2.GetComponent<PlayerScript>().getDamagePerHit();
+            hp -= damage;
+
+            if (hp <= 0)
+            {
+                Destroy(gameObject);
+            }
+        }
+    }
+
 }
