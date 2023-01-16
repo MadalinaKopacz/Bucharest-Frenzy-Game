@@ -263,6 +263,20 @@ public class PlayerScript : MonoBehaviour, IDataManager
             CheckGameOver();
         }
 
+        if (collision.gameObject.CompareTag("GruzMother"))
+        {
+            isTakingDamage = true;
+            enemyDamage = 5;
+            if (!isHit)
+            {
+                if (!godMode)
+                    hp -= enemyDamage;
+                isHit = true;
+                healthScript.setHealth();
+            }
+            CheckGameOver();
+        }
+
         if (collision.gameObject.CompareTag("Coin"))
         {
             playSound(collision.gameObject.GetComponent<AudioSource>().clip, 0.02f);
@@ -337,7 +351,7 @@ public class PlayerScript : MonoBehaviour, IDataManager
 
     private void OnCollisionExit2D(Collision2D collision)
     {
-        var obstaclesList = new List<string> { "Rat", "Dog" };
+        var obstaclesList = new List<string> { "Rat", "Dog" , "GruzMother"};
 
         if (obstaclesList.Contains(collision.gameObject.tag))
         {
