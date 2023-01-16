@@ -21,6 +21,9 @@ EditorBuildSettings:
     path: Assets/Scenes/Level3.unity
     guid: a496bc3578041c543bf0df5f2b5e5f71
   - enabled: 1
+    path: Assets/Scenes/Gruz Mother.unity
+    guid: 956e9d86a63a08a43beeb2d228b8bc8f
+  - enabled: 1
     path: Assets/Scenes/EndOfTheGame.unity
     guid: d642c1baaaaf7974dbc9cdab9d1fc376
   m_configObjects: {}

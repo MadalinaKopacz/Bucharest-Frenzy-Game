@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Net.NetworkInformation;
 using UnityEngine;
+using UnityEngine.SceneManagement;
 
 public class GruzMother : MonoBehaviour
 {
@@ -36,6 +37,7 @@ public class GruzMother : MonoBehaviour
     private Animator enemyAnim;
     [SerializeField] private int hp = 50;
     [SerializeField] private Transform player2;
+    private AudioSource finishSound;
 
 
     void Start()
@@ -58,6 +60,15 @@ public class GruzMother : MonoBehaviour
         enemyAnim.SetTrigger("Slamed");
         enemyRB.velocity = Vector2.zero;
         hasPlayerPositon = false;
+    }
+
+    private IEnumerator ChangeScene(float numOfSeconds)
+    {
+        Time.timeScale = 0;
+        //finishSound.Play();
+        yield return new WaitForSecondsRealtime(numOfSeconds);
+        Time.timeScale = 1;
+        SceneManager.LoadScene("EndOfTheGame");
     }
 
     void RandomStatePicker()
@@ -211,6 +222,10 @@ public class GruzMother : MonoBehaviour
             if (hp <= 0)
             {
                 Destroy(gameObject);
+                //Time.timeScale = 0;
+                //yield return new WaitForSecondsRealtime(1f);
+                //Time.timeScale = 1;
+                SceneManager.LoadScene("EndOfTheGame");
             }
         }
     }
