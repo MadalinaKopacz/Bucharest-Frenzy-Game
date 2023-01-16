@@ -17,8 +17,8 @@ public class LoadPrefsScript : MonoBehaviour
     [Header("Quality Level Setting")]
     [SerializeField] private TMP_Dropdown qualityDropdown;
 
-    [Header("Fullscreen Setting")]
-    [SerializeField] private Toggle fullScreenToggle;
+   // [Header("Fullscreen Setting")]
+   // [SerializeField] private Toggle fullScreenToggle;
 
     private void Awake()
     {
@@ -44,7 +44,7 @@ public class LoadPrefsScript : MonoBehaviour
                 QualitySettings.SetQualityLevel(localQuality);
             }
 
-            if (PlayerPrefs.HasKey("masterFullscreen"))
+           /* if (PlayerPrefs.HasKey("masterFullscreen"))
             {
                 int localFullscreen = PlayerPrefs.GetInt("masterFullscreen");
 
@@ -59,7 +59,7 @@ public class LoadPrefsScript : MonoBehaviour
                     Screen.fullScreen = false;
                     fullScreenToggle.isOn = false;
                 }
-            }
+            }*/
         }
     }
 }
