@@ -17,10 +17,10 @@ public class MainMenuScript : MonoBehaviour
     [SerializeField] private float defaultVolume = 1.0f;
     [Space(10)]
     [SerializeField] private TMP_Dropdown qualityDropdown;
-    [SerializeField] private Toggle fullScreenToggle;
+    //[SerializeField] private Toggle fullScreenToggle;
 
     private int _qualityLevel;
-    private bool _isFullScreen;
+    //private bool _isFullScreen;
     [Header("Resolution Dropdown")]
     public TMP_Dropdown resolutionDropdown;
     private Resolution[] resolutions;
@@ -57,10 +57,10 @@ public class MainMenuScript : MonoBehaviour
         Screen.SetResolution(resolution.width, resolution.height, Screen.fullScreen);
     }
 
-    public void SetFullScreen(bool isFullscreen)
+    /*public void SetFullScreen(bool isFullscreen)
     {
         _isFullScreen = isFullscreen;
-    }
+    }*/
 
     public void SetQuality(int qualityIndex)
     {
@@ -73,8 +73,8 @@ public class MainMenuScript : MonoBehaviour
         PlayerPrefs.SetInt("masterQuality", _qualityLevel);
         QualitySettings.SetQualityLevel(_qualityLevel);
 
-        PlayerPrefs.SetInt("masterFullscreen", (_isFullScreen ? 1 : 0));
-        Screen.fullScreen = _isFullScreen;
+       // PlayerPrefs.SetInt("masterFullscreen", (_isFullScreen ? 1 : 0));
+        //Screen.fullScreen = _isFullScreen;
     }
 
     public void loadOptions()
@@ -133,8 +133,8 @@ public class MainMenuScript : MonoBehaviour
             qualityDropdown.value = 1;
             QualitySettings.SetQualityLevel(1);
 
-            fullScreenToggle.isOn = false;
-            Screen.fullScreen = false;
+            //fullScreenToggle.isOn = false;
+            //Screen.fullScreen = false;
 
             Resolution currentResolution = Screen.currentResolution;
             Screen.SetResolution(currentResolution.width, currentResolution.height, Screen.fullScreen);
