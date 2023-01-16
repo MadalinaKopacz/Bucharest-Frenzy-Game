@@ -111,6 +111,7 @@ public class PlayerScript : MonoBehaviour, IDataManager
         currencyScript = currency.GetComponent<CurrencyScript>();
         damagePerHit = 10;
         Inverted = false;
+        isGameOver=false;
         soundPlayer1 = GetComponents<AudioSource>()[0];
         soundPlayer2 = GetComponents<AudioSource>()[1];
     }
