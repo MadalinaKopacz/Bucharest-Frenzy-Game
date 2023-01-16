@@ -13,6 +13,7 @@ public struct PlayerData {
     [SerializeField] public int damagePerHit;
     [SerializeField] public float speed;
     [SerializeField] public float jumpSize;
+    [SerializeField] public int oldGold;
 
     // Values for powerup 
     [SerializeField] public bool inPowerup;

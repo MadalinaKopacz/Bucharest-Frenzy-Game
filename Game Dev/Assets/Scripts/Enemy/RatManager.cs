@@ -20,21 +20,23 @@ public class RatManager : MonoBehaviour, IDataManager
 
     public void LoadData(GameData data)
     {
-        List<GameObject> loadedRats = FindObjects.GetAllObjectsOnlyInScene("Rat");
-
-        // See what coins were consumed so we won't put them in the scene
-        foreach(GameObject go in loadedRats)
+        Vector3 helperV = new Vector3(-1000, -1000, -1000);
+        if (Vector3.Distance(data.playerData.position, helperV) > 0)
         {
-            if (go.GetComponent<Rat>() != null)
+            List<GameObject> loadedRats = FindObjects.GetAllObjectsOnlyInScene("Rat");
+            foreach(GameObject go in loadedRats)
             {
-                string id = data.RatIds.Find(x => x == go.GetComponent<Rat>().id);
-                if (id == null)
+                if (go.GetComponent<Rat>() != null)
                 {
-                    // Coin was found in coin manager => picked up
-                    go.SetActive(false);
-                    continue;
-                } else {
-                    go.transform.position = data.RatPositions[data.RatIds.FindIndex(x => x == go.GetComponent<Rat>().id)];
+                    string id = data.RatIds.Find(x => x == go.GetComponent<Rat>().id);
+                    if (id == null)
+                    {
+                        // Coin was found in coin manager => picked up
+                        go.SetActive(false);
+                        continue;
+                    } else {
+                        go.transform.position = data.RatPositions[data.RatIds.FindIndex(x => x == go.GetComponent<Rat>().id)];
+                    }
                 }
             }
         }

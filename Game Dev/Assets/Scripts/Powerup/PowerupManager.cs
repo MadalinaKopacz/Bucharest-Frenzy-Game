@@ -25,15 +25,19 @@ public class PowerupManager : MonoBehaviour, IDataManager
 
     public void LoadData(GameData data)
     {
-        scenePowerups = FindObjects.GetAllObjectsOnlyInScene("Powerup");
-        foreach(GameObject go in scenePowerups)
+        Vector3 helperV = new Vector3(-1000, -1000, -1000);
+        if (Vector3.Distance(data.playerData.position, helperV) > 0)
         {
-            string powerupId = data.PowerupManager.Find(x => x == go.GetComponent<Powerup>().id);
-            if (powerupId == null)
+            scenePowerups = FindObjects.GetAllObjectsOnlyInScene("Powerup");
+            foreach(GameObject go in scenePowerups)
             {
-                // powerup was used
-                go.SetActive(false);
-                continue;
+                string powerupId = data.PowerupManager.Find(x => x == go.GetComponent<Powerup>().id);
+                if (powerupId == null)
+                {
+                    // powerup was used
+                    go.SetActive(false);
+                    continue;
+                }
             }
         }
     }

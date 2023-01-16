@@ -48,9 +48,16 @@ public class PlayerScript : MonoBehaviour, IDataManager
     {
         Start();
         healthScript.Start();
-        transform.position = data.playerData.position;
+        Vector3 helperV = new Vector3(-1000, -1000, -1000);
+        if (Vector3.Distance(data.playerData.position, helperV) > 0)
+        {
+            transform.position = data.playerData.position;
+            this.gold = data.playerData.gold;
+        } else {
+            this.gold = data.playerData.oldGold;   
+        }
+        
         this.hp = data.playerData.hp;
-        this.gold = data.playerData.gold;
         this.damagePerHit = data.playerData.damagePerHit;
         
         // PlayerMovement

@@ -684,28 +684,6 @@ GameObject:
   m_CorrespondingSourceObject: {fileID: 5447067519140588208, guid: f4399aa4325b958428223a28f82e9851, type: 3}
   m_PrefabInstance: {fileID: 1390648595}
   m_PrefabAsset: {fileID: 0}
---- !u!114 &436625927
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 436625926}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: d6ba2938173128d408a401538038e1bd, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  mainmenu: {fileID: 0}
-  options: {fileID: 0}
-  audioMenu: {fileID: 0}
-  graphics: {fileID: 0}
-  volumeTextValue: {fileID: 0}
-  volumeSlider: {fileID: 0}
-  defaultVolume: 1
-  qualityDropdown: {fileID: 0}
-  fullScreenToggle: {fileID: 0}
-  resolutionDropdown: {fileID: 0}
 --- !u!114 &436625928
 MonoBehaviour:
   m_ObjectHideFlags: 0

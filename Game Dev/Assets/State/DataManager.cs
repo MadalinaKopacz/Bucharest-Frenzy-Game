@@ -89,13 +89,25 @@ public class DataManager : MonoBehaviour
         SceneManager.sceneLoaded -= OnSceneLoaded;
     }
 
-    public void SaveGame()
+    public void SaveGame(bool goNext=false, int nextScene=0, int oldGold=0)
     {
-        gameData.sceneIdx = SceneManager.GetActiveScene().buildIndex;
+        if (goNext)
+        {
+            gameData.sceneIdx = nextScene;
+        } else 
+        {
+            gameData.sceneIdx = SceneManager.GetActiveScene().buildIndex;
+        }
 
         foreach (IDataManager dataObject in dataManagerObjects)
         {
             dataObject.SaveData(ref gameData);
+        }
+
+        if (goNext)
+        {
+            gameData.playerData.position = new Vector3(-1000, -1000, -1000);
+            gameData.playerData.oldGold = oldGold;
         }
 
         FileManager.WriteToFile("GameSave.dat", gameData.ToJson());
