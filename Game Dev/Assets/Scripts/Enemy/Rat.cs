@@ -4,6 +4,14 @@ using UnityEngine;
 
 public class Rat : MonoBehaviour
 {
+    [SerializeField] public string id;
+        
+    [ContextMenu("Generate ID")]
+    public void GenerateID()
+    {
+        id = System.Guid.NewGuid().ToString();
+    }
+    
     [SerializeField] private int hp = 10;
     [SerializeField] private Transform player;
     private Rigidbody2D rb;
@@ -27,7 +35,8 @@ public class Rat : MonoBehaviour
 
             if (hp <= 0)
             {
-                Destroy(gameObject);
+                //Destroy(gameObject);
+                Destroy(transform.parent.gameObject);
             }
         }
 
@@ -68,6 +77,11 @@ public class Rat : MonoBehaviour
         }
 
         if (collision.gameObject.CompareTag("Powerup"))
+        {
+            Physics2D.IgnoreCollision(collision.gameObject.GetComponent<Collider2D>(), GetComponent<Collider2D>());
+        }
+
+        if (collision.gameObject.CompareTag("Dog"))
         {
             Physics2D.IgnoreCollision(collision.gameObject.GetComponent<Collider2D>(), GetComponent<Collider2D>());
         }

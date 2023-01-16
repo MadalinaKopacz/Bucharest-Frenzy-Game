@@ -16,7 +16,7 @@ public class Bullet : MonoBehaviour
         Physics2D.IgnoreLayerCollision(9, 10);
         Physics2D.IgnoreLayerCollision(9, 6);
         Physics2D.IgnoreLayerCollision(9, 11);
-        Physics2D.IgnoreLayerCollision(9, 7);
+        //Physics2D.IgnoreLayerCollision(9, 7);
 
 
         mainCam = GameObject.FindGameObjectWithTag("MainCamera").GetComponent<Camera>();

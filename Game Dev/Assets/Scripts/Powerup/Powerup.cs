@@ -11,6 +11,15 @@ public class Powerup : MonoBehaviour
     [SerializeField] private float jumpAddition;
     [SerializeField] private float powerupDuration;
     [SerializeField] private int price;
+
+    [SerializeField] public string id;
+    [SerializeField] private bool inShop;
+    
+    [ContextMenu("Generate ID")]
+    public void GenerateID()
+    {
+        id = System.Guid.NewGuid().ToString();
+    }
     
 
     public int getHpAddition()

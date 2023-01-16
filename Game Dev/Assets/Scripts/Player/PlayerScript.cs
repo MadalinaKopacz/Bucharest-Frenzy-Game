@@ -2,8 +2,9 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
-public class PlayerScript : MonoBehaviour
+public class PlayerScript : MonoBehaviour, IDataManager
 {
+    // UI
     [SerializeField] private GameObject healthBar;
     private HealthBarScript healthScript;
 
@@ -12,14 +13,20 @@ public class PlayerScript : MonoBehaviour
 
     [SerializeField] private GameObject gameOver;
 
+    // Player stats
     [SerializeField] private int hp = 100;
     [SerializeField] private int gold = 10;
     [SerializeField] public int damagePerHit;
 
-    private bool isHit;
-    private float timeSinceLastHit;
-    public bool Inverted { get; set; }
+    // Powerup stats helper
+    [SerializeField] public int restoreDamagePerHit;
+    [SerializeField] public float restoreSpeed;
+    [SerializeField] public float restoreJump;
+    [SerializeField] public float timeLeft;
+    [SerializeField] public bool inPowerup;
 
+
+    // Sound
     private AudioSource soundPlayer1;
     private AudioSource soundPlayer2;
     public AudioClip shootSound;
@@ -27,7 +34,68 @@ public class PlayerScript : MonoBehaviour
     public AudioClip hurtSound;
     public AudioClip downgradeSound;
     public AudioClip upgradeSound;
+
+    // Helpers
+    private bool isHit;
+    private bool godMode = false;
+    private float timeSinceLastHit;
+    public bool Inverted { get; set; }
+    public static bool isGameOver = false;
+    private bool isTakingDamage = false;
+    private int enemyDamage = 0;
     
+    public void LoadData(GameData data)
+    {
+        Start();
+        healthScript.Start();
+        transform.position = data.playerData.position;
+        this.hp = data.playerData.hp;
+        this.gold = data.playerData.gold;
+        this.damagePerHit = data.playerData.damagePerHit;
+        
+        // PlayerMovement
+        gameObject.GetComponent<PlayerMovement>().setSpeed(data.playerData.speed);
+        gameObject.GetComponent<PlayerMovement>().setJumpSize(data.playerData.jumpSize);
+
+        // Player powerup
+        this.inPowerup =  data.playerData.inPowerup;
+        this.restoreDamagePerHit = data.playerData.restoreDamagePerHit;
+        this.restoreSpeed = data.playerData.restoreSpeed;
+        this.restoreJump = data.playerData.restoreJump;
+        this.timeLeft = data.playerData.timeLeft;
+
+        healthScript.Start();
+        healthScript.setHealth();
+        currencyScript.setCurrency(gold);
+
+        if (inPowerup)
+        {
+            // Player was using a powerup when game was saved, make sure
+            // to restore the values
+            StartCoroutine(RestoreValuesPowerup(timeLeft, restoreDamagePerHit, 
+                restoreSpeed, restoreJump));
+        }
+    }
+
+    public void SaveData(ref GameData data)
+    {
+        data.playerData.position = gameObject.transform.position;
+        data.playerData.hp = this.hp;
+        data.playerData.gold = this.gold;
+        data.playerData.damagePerHit = this.damagePerHit;
+
+        // Player movement
+        data.playerData.speed = gameObject.GetComponent<PlayerMovement>().getSpeed();
+        data.playerData.jumpSize = gameObject.GetComponent<PlayerMovement>().getJumpSize();
+        
+        // Player powerup
+        data.playerData.inPowerup = this.inPowerup;
+        data.playerData.restoreDamagePerHit = this.restoreDamagePerHit;
+        data.playerData.restoreSpeed = this.restoreSpeed;
+        data.playerData.restoreJump = this.restoreJump;
+        data.playerData.timeLeft = this.timeLeft;
+    }
+
     private void Start()
     {
         healthScript = healthBar.GetComponent<HealthBarScript>();
@@ -42,22 +110,45 @@ public class PlayerScript : MonoBehaviour
 
     void Update()
     {
+        if (Time.time == 0)
+        {
+            PauseSound();
+        } 
+        if (Time.time == 1)
+        {
+            UnpauseSound();
+        }
+
         if (Time.time >= timeSinceLastHit + 0.8f)
         {
             isHit = false;
             timeSinceLastHit = Time.time;
         }
+        if (!isHit && isTakingDamage)
+        {
+            takeDamage(enemyDamage);
+        }
         currencyScript.setCurrency(gold);
+
+        if (Input.GetKeyDown(KeyCode.K))
+        {
+            godMode = !godMode;
+            SetHp(100);
+            Debug.Log("god");
+        }
     }
 
     public void CheckGameOver()
     {
         if (hp <= 0)
         {
+            isGameOver = true;
             gameOver.SetActive(true);
+            Time.timeScale = 0f;
         }
         else
         {
+            Time.timeScale = 1f;
             gameOver.SetActive(false);
         }
     }
@@ -76,15 +167,69 @@ public class PlayerScript : MonoBehaviour
         }
     }
 
+    public void PauseSound()
+    {
+        if (soundPlayer1.isPlaying)
+        {
+            soundPlayer1.Pause();
+        } 
+
+        if (soundPlayer2.isPlaying) {
+            soundPlayer2.Pause();
+        } 
+
+        if (GameObject.Find("BackgroundSoundPlayer") != null )
+        {
+            AudioSource bck = GameObject.Find("BackgroundSoundPlayer").GetComponent<AudioSource>();
+            if (bck.isPlaying) 
+            {
+                bck.Pause();
+            }
+        }
+    }
+
+    public void UnpauseSound()
+    {
+        if (!soundPlayer1.isPlaying)
+        {
+            soundPlayer1.Play();
+        } 
+
+        if (!soundPlayer2.isPlaying) 
+        {
+            soundPlayer2.Play();
+        } 
+
+        if (GameObject.Find("BackgroundSoundPlayer")  != null )
+        {
+            AudioSource bck = GameObject.Find("BackgroundSoundPlayer").GetComponent<AudioSource>();
+            if (!bck.isPlaying) 
+            {
+                bck.Play();
+            }
+        }
+    }
+
+    private void takeDamage(int damage)
+    {
+        if(!godMode)
+            hp -= damage;
+        isHit = true;
+        playSound(hurtSound, 0.02f);
+        healthScript.setHealth();
+        CheckGameOver();
+    }
+
     private IEnumerator OnCollisionEnter2D(Collision2D collision)
     {
-        int damage = 20; // to be changed dynamically when more enemies are implemented
-        var obstaclesList = new List<string> { "Rat" };
-        if (obstaclesList.Contains(collision.gameObject.tag))
+        if (collision.gameObject.CompareTag("Rat"))
         {
+            isTakingDamage = true;
+            enemyDamage = 20;
             if (!isHit)
             {
-                hp -= damage;
+                if (!godMode)
+                    hp -= enemyDamage;
                 isHit = true;
                 playSound(hurtSound, 0.02f);
                 healthScript.setHealth();
@@ -94,9 +239,9 @@ public class PlayerScript : MonoBehaviour
         int damageBird = 15;
         if (collision.gameObject.CompareTag("caca"))
         {
-            Destroy(collision.gameObject);
-            
-            hp -= damageBird;
+            Destroy(collision.gameObject);  
+            if(!godMode)
+                hp -= damageBird;
             isHit = true;
             playSound(hurtSound, 0.02f);
             healthScript.setHealth();
@@ -104,12 +249,28 @@ public class PlayerScript : MonoBehaviour
             CheckGameOver();
         }
 
-        int damageDog = 25;
         if (collision.gameObject.CompareTag("Dog"))
         {
+            isTakingDamage = true;
+            enemyDamage = 25;
             if (!isHit)
             {
-                hp -= damageDog;
+                if (!godMode)
+                    hp -= enemyDamage;
+                isHit = true;
+                healthScript.setHealth();
+            }
+            CheckGameOver();
+        }
+
+        if (collision.gameObject.CompareTag("GruzMother"))
+        {
+            isTakingDamage = true;
+            enemyDamage = 5;
+            if (!isHit)
+            {
+                if (!godMode)
+                    hp -= enemyDamage;
                 isHit = true;
                 healthScript.setHealth();
             }
@@ -128,7 +289,7 @@ public class PlayerScript : MonoBehaviour
         {
             Destroy(collision.gameObject);
             Inverted = true;
-            yield return new WaitForSeconds(5);
+            yield return new WaitForSeconds(7);
             Inverted = false;
 
         }
@@ -163,17 +324,38 @@ public class PlayerScript : MonoBehaviour
         }
         // Hp is added without being removed later
         PowerupHp(powerup, isDownGrade);
-        int restoreDamagePerHit = PowerupDamage(powerup, isDownGrade);
-        float restoreSpeed = PowerupSpeed(powerup, isDownGrade);
-        float restoreJump = PowerupJump(powerup, isDownGrade);
+
+        inPowerup = true;
+        int _restoreDamagePerHit = PowerupDamage(powerup, isDownGrade);
+        float _restoreSpeed = PowerupSpeed(powerup, isDownGrade);
+        float _restoreJump = PowerupJump(powerup, isDownGrade);
 
         float duration = powerup.GetComponent<Powerup>().getPowerupDuration();
+
+        if (restoreDamagePerHit == 0 && duration > 0)
+        {
+            restoreDamagePerHit = _restoreDamagePerHit;
+            restoreSpeed = _restoreSpeed;
+            restoreJump = _restoreJump;
+        }
+
+        timeLeft = duration;
 
         // When powerup duration expires restore values back
         if (duration > 0)
         {
-            StartCoroutine(RestoreValuesPowerup(duration, restoreDamagePerHit, 
-                restoreSpeed, restoreJump));
+            StartCoroutine(RestoreValuesPowerup(duration, _restoreDamagePerHit, 
+                _restoreSpeed, _restoreJump));
+        }
+    }
+
+    private void OnCollisionExit2D(Collision2D collision)
+    {
+        var obstaclesList = new List<string> { "Rat", "Dog" , "GruzMother"};
+
+        if (obstaclesList.Contains(collision.gameObject.tag))
+        {
+            isTakingDamage = false;
         }
     }
 
@@ -187,6 +369,12 @@ public class PlayerScript : MonoBehaviour
         damagePerHit = oldDamagePerHit;
         GetComponent<PlayerMovement>().setSpeed(oldSpeed);
         GetComponent<PlayerMovement>().setJumpSize(oldJumpSize);
+
+        restoreDamagePerHit = 0;
+        restoreSpeed = 0;
+        restoreJump = 0;
+        timeLeft = 0;
+        inPowerup = false;
     }
 
     private void PowerupHp(GameObject powerup, bool isDownGrade = false)
@@ -260,6 +448,12 @@ public class PlayerScript : MonoBehaviour
 
     public void SetHp(int newHp)
     {
+        if(godMode == true)
+        {
+            hp = 100;
+            return;
+        }
+
         hp = newHp;
     }
 

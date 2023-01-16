@@ -12,7 +12,7 @@ public class HealthBarScript : MonoBehaviour
     private PlayerScript playerStats;
 
 
-    private void Start()
+    public void Start()
     {
         healthText = healthTextObject.GetComponent<Text>();
         playerStats = player.GetComponent<PlayerScript>();
@@ -21,7 +21,7 @@ public class HealthBarScript : MonoBehaviour
 
     public void setMaxHealth()
     {
-        slider.maxValue = playerStats.GetHp();
+        slider.maxValue = 100;
         slider.value = playerStats.GetHp();
     }
 

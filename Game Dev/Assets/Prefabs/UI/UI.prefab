@@ -135,9 +135,6 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   shopMenuUI: {fileID: 1004639399580944011}
   pauseMenuUI: {fileID: 7331482724856061944}
-  items:
-  - {fileID: 0}
-  - {fileID: 0}
   priceText: {fileID: 1004639399468228043}
   playerScript: {fileID: 0}
   warningText: {fileID: 82653337572818585}
@@ -345,6 +342,10 @@ PrefabInstance:
     - target: {fileID: 7802994559696077989, guid: 60d7b1a2bd8d36b4e908735ac2a60600, type: 3}
       propertyPath: m_Name
       value: GameOver
+      objectReference: {fileID: 0}
+    - target: {fileID: 7802994559696077989, guid: 60d7b1a2bd8d36b4e908735ac2a60600, type: 3}
+      propertyPath: m_IsActive
+      value: 0
       objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: 60d7b1a2bd8d36b4e908735ac2a60600, type: 3}
@@ -709,7 +710,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 6242007425953599693, guid: 76e3306822ad4d74ab543c5432f0d569, type: 3}
       propertyPath: m_IsActive
-      value: 1
+      value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 6242007425953599694, guid: 76e3306822ad4d74ab543c5432f0d569, type: 3}
       propertyPath: m_Pivot.x
@@ -741,11 +742,11 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 6242007425953599694, guid: 76e3306822ad4d74ab543c5432f0d569, type: 3}
       propertyPath: m_SizeDelta.x
-      value: 0
+      value: 79.959
       objectReference: {fileID: 0}
     - target: {fileID: 6242007425953599694, guid: 76e3306822ad4d74ab543c5432f0d569, type: 3}
       propertyPath: m_SizeDelta.y
-      value: 0
+      value: 101.766
       objectReference: {fileID: 0}
     - target: {fileID: 6242007425953599694, guid: 76e3306822ad4d74ab543c5432f0d569, type: 3}
       propertyPath: m_LocalPosition.x
@@ -777,11 +778,11 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 6242007425953599694, guid: 76e3306822ad4d74ab543c5432f0d569, type: 3}
       propertyPath: m_AnchoredPosition.x
-      value: 0
+      value: 39.979492
       objectReference: {fileID: 0}
     - target: {fileID: 6242007425953599694, guid: 76e3306822ad4d74ab543c5432f0d569, type: 3}
       propertyPath: m_AnchoredPosition.y
-      value: 0
+      value: 50.882996
       objectReference: {fileID: 0}
     - target: {fileID: 6242007425953599694, guid: 76e3306822ad4d74ab543c5432f0d569, type: 3}
       propertyPath: m_LocalEulerAnglesHint.x

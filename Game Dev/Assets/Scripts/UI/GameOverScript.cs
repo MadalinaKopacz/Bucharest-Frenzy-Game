@@ -13,8 +13,12 @@ public class GameOverScript : MonoBehaviour
 
     public void resetGame()
     {
-        resetStats();
+
+        Time.timeScale = 1f;
+        if(player.CompareTag("Player"))
+            resetStats();
         SceneManager.LoadScene(0);
+
     }
 
     private void resetStats()
