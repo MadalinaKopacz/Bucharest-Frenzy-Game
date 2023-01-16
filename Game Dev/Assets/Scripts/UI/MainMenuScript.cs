@@ -47,7 +47,7 @@ public class MainMenuScript : MonoBehaviour
         }
 
         resolutionDropdown.AddOptions(options);
-        resolutionDropdown.value = currentResolutionIndex;
+        SetResolution(currentResolutionIndex);
         resolutionDropdown.RefreshShownValue();
     }
 
@@ -75,19 +75,6 @@ public class MainMenuScript : MonoBehaviour
 
         PlayerPrefs.SetInt("masterFullscreen", (_isFullScreen ? 1 : 0));
         Screen.fullScreen = _isFullScreen;
-    }
-
-    public void newGame()
-    {
-        SceneManager.LoadScene("Assets/Scenes/Level1.unity");
-    }
-
-    public void loadGame()
-    {
-        if (!DataManager.LoadJsonData())
-        {
-            newGame();
-        }
     }
 
     public void loadOptions()

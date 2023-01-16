@@ -8,7 +8,7 @@ public class FinishLine : MonoBehaviour
 
     private void Start()
     {
-        finishSound = GetComponents<AudioSource>()[0];
+        finishSound = GetComponent<AudioSource>();
     }
 
     private void OnTriggerEnter2D(Collider2D collision)
@@ -16,7 +16,6 @@ public class FinishLine : MonoBehaviour
         if (collision.gameObject.CompareTag("Player") && !PlayerScript.isGameOver)
         {
             StartCoroutine(ChangeScene(1f));
-            
         }
     }
 

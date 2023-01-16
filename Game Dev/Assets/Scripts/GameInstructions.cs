@@ -12,18 +12,21 @@ public class GameInstructions : MonoBehaviour
     [SerializeField] private GameObject i5;
     [SerializeField] private GameObject i6;
     private static bool isPaused = true;
+    public static bool finishTutorial = false;
 
     void Update()
     {   
-        if (isPaused)
+        if (!finishTutorial)
         {
-            Time.timeScale = 0f;
+            if (isPaused)
+            {
+                Time.timeScale = 0f;
+            }
+            else
+            {
+                Time.timeScale = 1f;
+            }
         }
-        else
-        {
-            Time.timeScale = 1f;
-        }
-        
         
     }
     public void i1i2()
@@ -60,5 +63,7 @@ public class GameInstructions : MonoBehaviour
     {
         i6.SetActive(false);
         isPaused = false;
+        Time.timeScale = 1f;
+        finishTutorial = true;
     }
 }
